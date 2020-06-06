@@ -20,31 +20,7 @@ let db = admin.firestore();
 
 
 //endpoints api express
-
-app.post("/create",async (req, res)=>{
-    const product = req.body;
-    try{
-        await db.collection("products").add({
-            code: product.code,
-            name: product.name,
-            description: product.description,
-            image: product.image,
-            stock: product.stock,
-            price: product.price
-        });
-        res.status(201).json({        
-            message: "Product Added successfully!",
-            product: product
-        });
-    }catch(err){
-        res.status(500).json({
-            message: `Ha ocurido un error: ${err}`
-        });
-    }
-});
-
-
-app.get("/list", async (req, res)=>{
+app.get("/products", async (req, res)=>{
 
     try{
         const products = [];
@@ -70,11 +46,106 @@ app.get("/list", async (req, res)=>{
         res.status(500).json({
             message: `Ha ocurido un error listando los productos: ${err}`
         });
-    }
-    
-    
+    }    
 });
 
+
+app.get("/product/:id", async (req, res)=>{
+    const docId = req.params.id;
+
+    try{
+        let product = [];
+        const productGet = await db.collection("products").doc(docId).get()        
+        let productToAdd = {
+            id: productGet.id,
+            code: productGet.data().code,
+            name: productGet.data().name,
+            description: productGet.data().description,
+            image: productGet.data().image,
+            stock: productGet.data().stock,
+            price: productGet.data().price
+        }
+        product.push(productToAdd);
+    
+        res.status(200).json({product});
+
+    }catch(err){
+        res.status(500).json({
+            message: `Ha ocurido un error listando el producto o el producto no existe: ${err}`
+        });
+    }
+
+});
+
+
+app.post("/create",async (req, res)=>{
+    const product = req.body;
+    try{
+        await db.collection("products").add({
+            code: product.code,
+            name: product.name,
+            description: product.description,
+            image: product.image,
+            stock: product.stock,
+            price: product.price
+        });
+        res.status(201).json({        
+            message: "Product Added successfully!",
+            product: product
+        });
+    }catch(err){
+        res.status(500).json({
+            message: `Ha ocurido un error: ${err}`
+        });
+    }
+});
+
+
+app.put("/update/:id", async (req, res)=>{
+    const docId = req.params.id;
+    const product = req.body;
+
+    try{
+        let productUpdate = db.collection('users').doc(docId);
+
+        let setProduct = productUpdate.set({
+        'code': product.code,
+        'name': product.name,
+        'description': product.description,
+        'image': product.image,
+        'stock': product.stock,
+        'price': product.price
+        });
+
+        res.status(200).json({
+            message: "Product updated successfully!",
+            product: setProduct
+        });
+
+    }catch(err){
+        res.status(500).json({
+            message: `Ha ocurido un error: ${err}`
+        });
+    }
+
+});
+
+
+app.delete("/delete/:id", async (req, res)=>{
+    const docId = req.params.id;
+    try{
+        let deleteDoc = db.collection("products").doc(docId).delete()
+
+        res.status(200).json({
+            message: "Product deleted successfully!"
+        })
+    }catch(err){
+        res.status(500).json({
+            message: `Ha ocurido un error borrando el producto: ${err}`
+        });
+    }
+    
+});
 
 
 
