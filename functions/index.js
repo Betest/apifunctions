@@ -44,6 +44,36 @@ app.post("/create",async (req, res)=>{
 });
 
 
+app.get("/list", async (req, res)=>{
+
+    try{
+        const products = [];
+        const allProducts = await db.collection("products").get();
+
+        for(const doc of allProducts.docs){
+            let productToAdd = {
+                id: doc.id,
+                code: doc.data().code,
+                name: doc.data().name,
+                description: doc.data().description,
+                image: doc.data().image,
+                stock: doc.data().stock,
+                price: doc.data().price
+            }
+            products.push(productToAdd);
+        }
+        res.status(200).json({        
+            message: "Products list",
+            products: products
+        });
+    }catch(err){
+        res.status(500).json({
+            message: `Ha ocurido un error listando los productos: ${err}`
+        });
+    }
+    
+    
+});
 
 
 
