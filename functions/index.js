@@ -78,7 +78,7 @@ app.get("/product/:id", async (req, res)=>{
 });
 
 
-app.post("/create",async (req, res)=>{
+app.post("/save",async (req, res)=>{
     const product = req.body;
     try{
         await db.collection("products").add({
@@ -106,7 +106,7 @@ app.put("/update/:id", async (req, res)=>{
     const product = req.body;
 
     try{
-        let productUpdate = db.collection('users').doc(docId);
+        let productUpdate = db.collection('products').doc(docId);
 
         let setProduct = productUpdate.set({
         'code': product.code,
@@ -118,8 +118,7 @@ app.put("/update/:id", async (req, res)=>{
         });
 
         res.status(200).json({
-            message: "Product updated successfully!",
-            product: setProduct
+            message: "Product updated successfully!"
         });
 
     }catch(err){
