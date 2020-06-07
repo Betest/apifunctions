@@ -38,10 +38,7 @@ app.get("/products", async (req, res)=>{
             }
             products.push(productToAdd);
         }
-        res.status(200).json({        
-            message: "Products list",
-            products: products
-        });
+        res.status(200).json({products});
     }catch(err){
         res.status(500).json({
             message: `Ha ocurido un error listando los productos: ${err}`
@@ -89,10 +86,7 @@ app.post("/save",async (req, res)=>{
             stock: product.stock,
             price: product.price
         });
-        res.status(201).json({        
-            message: "Product Added successfully!",
-            product: product
-        });
+        res.status(201).json({product});
     }catch(err){
         res.status(500).json({
             message: `Ha ocurido un error: ${err}`
