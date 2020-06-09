@@ -21,7 +21,6 @@ let db = admin.firestore();
 
 //endpoints api express
 app.get("/products", async (req, res)=>{
-
     try{
         const products = [];
         const allProducts = await db.collection("products").get();
@@ -48,9 +47,8 @@ app.get("/products", async (req, res)=>{
 
 
 app.get("/product/:id", async (req, res)=>{
-    const docId = req.params.id;
-
     try{
+        const docId = req.params.id;
         let product = [];
         const productGet = await db.collection("products").doc(docId).get()        
         let productToAdd = {
@@ -75,9 +73,9 @@ app.get("/product/:id", async (req, res)=>{
 });
 
 
-app.post("/save",async (req, res)=>{
-    const product = req.body;
+app.post("/save",async (req, res)=>{    
     try{
+        const product = req.body;
         await db.collection("products").add({
             code: product.code,
             name: product.name,
@@ -96,10 +94,9 @@ app.post("/save",async (req, res)=>{
 
 
 app.put("/update/:id", async (req, res)=>{
-    const docId = req.params.id;
-    const product = req.body;
-
     try{
+        const docId = req.params.id;
+        const product = req.body;
         let productUpdate = db.collection('products').doc(docId);
 
         let setProduct = productUpdate.set({
@@ -124,9 +121,9 @@ app.put("/update/:id", async (req, res)=>{
 });
 
 
-app.delete("/delete/:id", async (req, res)=>{
-    const docId = req.params.id;
+app.delete("/delete/:id", async (req, res)=>{    
     try{
+        const docId = req.params.id;
         let deleteDoc = db.collection("products").doc(docId).delete()
 
         res.status(200).json({
